@@ -49,6 +49,12 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState("poem");
   const [inspiration, setInspiration] = useState<string | null>(null);
   const [count, setCount] = useState(0);
+  const [randomThemeIndex, setRandomThemeIndex] = useState(0);
+
+  useEffect(() => {
+    // Initialize random theme index on client-side to avoid hydration mismatch
+    setRandomThemeIndex(Math.floor(Math.random() * themeIdeas.length));
+  }, []);
 
   const handlePoemSubmit = async (data: GeneratePoemInput) => {
     setIsLoading(true);
@@ -89,15 +95,9 @@ export default function HomePage() {
   };
 
   const showRandomInspiration = () => {
-    let randomIndex = 0;
-    // This check is to prevent an infinite loop if themeIdeas is empty,
-    // and also to avoid issues with Math.random() during server-side rendering
-    // by deferring its execution to the client-side within useEffect.
-    // However, for this simple case, we can ensure it runs client-side.
-    if (typeof window !== "undefined") {
-      randomIndex = Math.floor(Math.random() * themeIdeas.length);
-    }
-    setInspiration(themeIdeas[randomIndex]);
+    const newIndex = Math.floor(Math.random() * themeIdeas.length);
+    setRandomThemeIndex(newIndex);
+    setInspiration(themeIdeas[newIndex]);
   };
 
   const incrementCount = () => {
@@ -107,7 +107,7 @@ export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col md:flex-row bg-transparent antialiased">
       {/* Left Panel */}
-      <section className="w-full md:w-[450px] md:max-w-[40%] p-6 md:p-8 space-y-6 bg-card/80 backdrop-blur-md md:border-r border-border/50 md:overflow-y-auto shadow-lg md:shadow-none">
+      <section className="w-full md:w-2/5 p-6 md:p-8 space-y-6 bg-card/80 backdrop-blur-md md:border-r border-border/50 md:overflow-y-auto shadow-lg md:shadow-none">
         <AppHeader />
         <Tabs defaultValue="poem" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-4">
@@ -161,7 +161,7 @@ export default function HomePage() {
       </section>
 
       {/* Right Panel */}
-      <section className="w-full md:flex-1 p-6 md:p-8 md:overflow-y-auto">
+      <section className="w-full md:w-3/5 p-6 md:p-8 md:overflow-y-auto">
         <GeneratedOutput
           title={generatedContent.title}
           content={generatedContent.text}
