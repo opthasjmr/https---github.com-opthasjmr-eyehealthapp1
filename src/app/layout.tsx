@@ -33,25 +33,25 @@ export default function RootLayout({
           <Image
             className="block dark:hidden"
             src="https://placehold.co/1920x1080.png"
-            alt="Light floral background"
+            alt="Light textured background"
             layout="fill"
             objectFit="cover"
             quality={80}
             priority
-            data-ai-hint="delicate floral pattern"
+            data-ai-hint="paper texture"
           />
           {/* Dark theme background */}
           <Image
             className="hidden dark:block"
             src="https://placehold.co/1920x1080.png"
-            alt="Dark moody floral background"
+            alt="Dark textured background"
             layout="fill"
             objectFit="cover"
             quality={80}
             priority
-            data-ai-hint="moody floral"
+            data-ai-hint="dark texture"
           />
-          <div className="absolute inset-0 bg-background/50 dark:bg-background/60 backdrop-blur-xs dark:backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-background/40 dark:bg-background/50 backdrop-blur-sm dark:backdrop-blur-md" />
         </div>
         {children}
         <Toaster />

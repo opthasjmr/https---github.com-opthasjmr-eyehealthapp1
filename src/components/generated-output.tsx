@@ -31,7 +31,7 @@ export function GeneratedOutput({ title, content, isLoading, inputUsed }: Genera
   }, [content]);
 
   return (
-    <Card className="h-full flex flex-col shadow-xl bg-card/80 backdrop-blur-sm border-primary/30">
+    <Card className="h-full flex flex-col shadow-xl bg-card/70 backdrop-blur-md border-primary/30">
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center text-2xl text-primary">
           <Leaf className="mr-2 h-6 w-6" />

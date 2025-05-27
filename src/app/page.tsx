@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PoemGeneratorForm } from "@/components/poem-generator-form";
 import { LyricsGeneratorForm } from "@/components/lyrics-generator-form";
@@ -13,7 +13,7 @@ import { generateLyrics, type GenerateLyricsInput } from "@/ai/flows/generate-ly
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Sparkles, PlusCircle } from "lucide-react"; // Added PlusCircle for the new counter
+import { Sparkles, PlusCircle } from "lucide-react";
 
 type GeneratedContentType = {
   title: string;
@@ -48,7 +48,7 @@ export default function HomePage() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("poem");
   const [inspiration, setInspiration] = useState<string | null>(null);
-  const [count, setCount] = useState(0); // JavaScript state for the counter
+  const [count, setCount] = useState(0);
 
   const handlePoemSubmit = async (data: GeneratePoemInput) => {
     setIsLoading(true);
@@ -89,12 +89,17 @@ export default function HomePage() {
   };
 
   const showRandomInspiration = () => {
-    // JavaScript logic to pick a random theme
-    const randomIndex = Math.floor(Math.random() * themeIdeas.length);
+    let randomIndex = 0;
+    // This check is to prevent an infinite loop if themeIdeas is empty,
+    // and also to avoid issues with Math.random() during server-side rendering
+    // by deferring its execution to the client-side within useEffect.
+    // However, for this simple case, we can ensure it runs client-side.
+    if (typeof window !== "undefined") {
+      randomIndex = Math.floor(Math.random() * themeIdeas.length);
+    }
     setInspiration(themeIdeas[randomIndex]);
   };
 
-  // JavaScript function to increment the counter
   const incrementCount = () => {
     setCount(prevCount => prevCount + 1);
   };
@@ -102,7 +107,7 @@ export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col md:flex-row bg-transparent antialiased">
       {/* Left Panel */}
-      <section className="w-full md:w-[450px] md:max-w-[40%] p-6 md:p-8 space-y-6 bg-card/90 backdrop-blur-sm md:border-r border-border/50 md:overflow-y-auto shadow-lg md:shadow-none">
+      <section className="w-full md:w-[450px] md:max-w-[40%] p-6 md:p-8 space-y-6 bg-card/80 backdrop-blur-md md:border-r border-border/50 md:overflow-y-auto shadow-lg md:shadow-none">
         <AppHeader />
         <Tabs defaultValue="poem" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-4">
@@ -167,4 +172,3 @@ export default function HomePage() {
     </main>
   );
 }
-
