@@ -1,7 +1,17 @@
 {
-  "name": "nextn",
+  "name": "bloomverse-ai-creations",
   "version": "0.1.0",
   "private": true,
+  "description": "An AI-powered application to generate poems, lyrics, and images using Next.js, React, Tailwind CSS, ShadCN UI, and Genkit.",
+  "author": "Firebase Studio User",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME#readme",
   "scripts": {
     "dev": "next dev --turbopack -p 9002",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
