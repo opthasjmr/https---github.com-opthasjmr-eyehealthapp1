@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -10,12 +11,33 @@ import { useToast } from "@/hooks/use-toast";
 import { generatePoem, type GeneratePoemInput } from "@/ai/flows/generate-poem";
 import { generateLyrics, type GenerateLyricsInput } from "@/ai/flows/generate-lyrics";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Sparkles } from "lucide-react"; // Added for the new feature
 
 type GeneratedContentType = {
   title: string;
   text: string | null;
   inputUsed?: { theme: string; style?: string };
 };
+
+const themeIdeas = [
+  "A journey through a dream",
+  "The sound of silence",
+  "A city at dawn",
+  "Whispers of the ancient forest",
+  "The resilience of a wildflower",
+  "Echoes from a forgotten past",
+  "Stargazing on a lonely night",
+  "The dance of the ocean waves",
+  "A secret kept by the mountains",
+  "The warmth of a shared memory",
+  "Shadows in the moonlight",
+  "The last leaf of autumn",
+  "A river's unending story",
+  "Footprints in the desert sand",
+  "The magic of a first snowfall"
+];
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +47,7 @@ export default function HomePage() {
   });
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("poem");
+  const [inspiration, setInspiration] = useState<string | null>(null); // Added for the new feature
 
   const handlePoemSubmit = async (data: GeneratePoemInput) => {
     setIsLoading(true);
@@ -64,6 +87,11 @@ export default function HomePage() {
     }
   };
 
+  const showRandomInspiration = () => {
+    const randomIndex = Math.floor(Math.random() * themeIdeas.length);
+    setInspiration(themeIdeas[randomIndex]);
+  };
+
   return (
     <main className="flex min-h-screen flex-col md:flex-row bg-transparent antialiased">
       {/* Left Panel */}
@@ -87,7 +115,20 @@ export default function HomePage() {
             />
           </TabsContent>
         </Tabs>
-         <Separator className="my-6" />
+
+        {/* Spark of Inspiration Feature */}
+        <div className="space-y-3 pt-2">
+          <Button onClick={showRandomInspiration} variant="outline" className="w-full">
+            <Sparkles className="mr-2 h-4 w-4 text-accent" /> Spark of Inspiration
+          </Button>
+          {inspiration && (
+            <Card className="p-3 bg-accent/10 border-accent/30 shadow-sm">
+              <p className="text-sm text-center text-accent-foreground/90 font-medium">{inspiration}</p>
+            </Card>
+          )}
+        </div>
+
+        <Separator className="my-6" />
         <div className="text-xs text-muted-foreground space-y-2">
           <p><strong>Tip:</strong> Be specific with your themes for more tailored results!</p>
           <p>Experiment with different poem styles to discover unique creations.</p>
