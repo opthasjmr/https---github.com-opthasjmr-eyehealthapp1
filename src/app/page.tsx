@@ -13,7 +13,7 @@ import { generateLyrics, type GenerateLyricsInput } from "@/ai/flows/generate-ly
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Sparkles } from "lucide-react"; // Added for the new feature
+import { Sparkles, PlusCircle } from "lucide-react"; // Added PlusCircle for the new counter
 
 type GeneratedContentType = {
   title: string;
@@ -47,7 +47,8 @@ export default function HomePage() {
   });
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("poem");
-  const [inspiration, setInspiration] = useState<string | null>(null); // Added for the new feature
+  const [inspiration, setInspiration] = useState<string | null>(null);
+  const [count, setCount] = useState(0); // JavaScript state for the counter
 
   const handlePoemSubmit = async (data: GeneratePoemInput) => {
     setIsLoading(true);
@@ -88,8 +89,14 @@ export default function HomePage() {
   };
 
   const showRandomInspiration = () => {
+    // JavaScript logic to pick a random theme
     const randomIndex = Math.floor(Math.random() * themeIdeas.length);
     setInspiration(themeIdeas[randomIndex]);
+  };
+
+  // JavaScript function to increment the counter
+  const incrementCount = () => {
+    setCount(prevCount => prevCount + 1);
   };
 
   return (
@@ -128,6 +135,19 @@ export default function HomePage() {
           )}
         </div>
 
+        {/* Simple JavaScript Counter Feature */}
+        <div className="space-y-3 pt-4">
+          <Separator />
+          <h3 className="text-lg font-medium pt-2 text-center">Simple Counter</h3>
+          <Card className="p-4 bg-secondary/20 border-secondary/40 shadow-sm">
+            <p className="text-center text-2xl font-semibold text-secondary-foreground mb-3">{count}</p>
+            <Button onClick={incrementCount} variant="secondary" className="w-full">
+              <PlusCircle className="mr-2 h-4 w-4" /> Increment Count
+            </Button>
+          </Card>
+        </div>
+
+
         <Separator className="my-6" />
         <div className="text-xs text-muted-foreground space-y-2">
           <p><strong>Tip:</strong> Be specific with your themes for more tailored results!</p>
@@ -147,3 +167,4 @@ export default function HomePage() {
     </main>
   );
 }
+
