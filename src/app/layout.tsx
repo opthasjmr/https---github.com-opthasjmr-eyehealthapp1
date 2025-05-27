@@ -29,16 +29,29 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(geistSans.variable, geistMono.variable, 'antialiased')}>
         <div className="fixed inset-0 -z-10">
+          {/* Light theme background */}
           <Image
+            className="block dark:hidden"
             src="https://placehold.co/1920x1080.png"
-            alt="Floral background"
+            alt="Light floral background"
             layout="fill"
             objectFit="cover"
             quality={80}
             priority
             data-ai-hint="delicate floral pattern"
           />
-          <div className="absolute inset-0 bg-background/50 backdrop-blur-xs" />
+          {/* Dark theme background */}
+          <Image
+            className="hidden dark:block"
+            src="https://placehold.co/1920x1080.png"
+            alt="Dark moody floral background"
+            layout="fill"
+            objectFit="cover"
+            quality={80}
+            priority
+            data-ai-hint="moody floral"
+          />
+          <div className="absolute inset-0 bg-background/50 dark:bg-background/60 backdrop-blur-xs dark:backdrop-blur-sm" />
         </div>
         {children}
         <Toaster />
