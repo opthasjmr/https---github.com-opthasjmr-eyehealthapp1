@@ -48,6 +48,9 @@ const generatePoemFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('The AI model failed to generate a poem. Please try again.');
+    }
+    return output;
   }
 );

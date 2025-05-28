@@ -40,6 +40,9 @@ const generateLyricsFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await generateLyricsPrompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('The AI model failed to generate lyrics. Please try again.');
+    }
+    return output;
   }
 );

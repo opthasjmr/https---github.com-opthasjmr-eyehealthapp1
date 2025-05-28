@@ -1,28 +1,69 @@
 
-# Settings to manage and configure a Firebase App Hosting backend.
-# https://firebase.google.com/docs/app-hosting/configure
+# Firebase App Hosting Configuration for BloomVerse (Next.js)
+# This file defines how Firebase App Hosting builds and runs your Next.js application.
+# It works in conjunction with firebase.json (for Firebase CLI) and
+# GitHub Actions (for CI/CD to Firebase Hosting).
+#
+# Documentation: https://firebase.google.com/docs/app-hosting/configure
 
+# Specifies the runtime environment for your application.
+# For Next.js, 'nodejs20' is a common and recommended choice.
+runtime: nodejs20
+
+# Specifies the build system. App Hosting usually detects this automatically for Next.js projects.
+# Options: 'npm', 'yarn', 'pnpm'.
+buildSystem: npm
+
+# Optional: Explicitly define the build command.
+# App Hosting typically infers 'npm run build' for Next.js.
+# buildCommand: npm run build
+
+# Optional: Explicitly define the start command.
+# App Hosting typically infers 'npm run start' for Next.js.
+# startCommand: npm run start
+
+# Configuration for how your application instances run.
 runConfig:
-  # Increase this value if you'd like to automatically spin up
-  # more instances in response to increased traffic.
+  # Maximum number of instances to scale up to.
+  # Increase this value if you anticipate high traffic.
   maxInstances: 1
-  # Optional: specify minInstances if needed
+  # Optional: Minimum number of instances to keep running.
   # minInstances: 0
+  # Optional: CPU allocation per instance.
+  # cpu: 1
+  # Optional: Memory allocation per instance.
+  # memoryMiB: 512
+  # Optional: Concurrency per instance.
+  # concurrency: 80
 
 # Environment variables for your running application.
-# GOOGLE_API_KEY is required for Genkit to function.
-# For production, it's highly recommended to use Google Cloud Secret Manager
-# to store sensitive values like API keys.
+# These are injected into your application at runtime.
 env:
-  # Example using Google Cloud Secret Manager (RECOMMENDED for API keys):
+  # GOOGLE_API_KEY is crucial for Genkit to function.
+  # It is STRONGLY RECOMMENDED to use Google Cloud Secret Manager for API keys.
   - variable: GOOGLE_API_KEY
-    # Replace 'YOUR_SECRET_NAME_HERE' with the name of your secret in Google Cloud Secret Manager
-    # e.g., BLOOMVERSE_GOOGLE_API_KEY or GENKIT_API_KEY
+    # IMPORTANT: Replace 'YOUR_SECRET_NAME_HERE' with the actual name of your
+    # secret in Google Cloud Secret Manager (e.g., BLOOMVERSE_GOOGLE_API_KEY).
+    # Ensure the App Hosting service account has the 'Secret Manager Secret Accessor' role.
     secret: YOUR_SECRET_NAME_HERE
-  # Remove or comment out the direct value if you were using it:
-  # - variable: GOOGLE_API_KEY
-  #   value: "YOUR_OLD_API_KEY_WAS_HERE"
 
-  # You can add other environment variables your app needs here.
-  # - variable: ANOTHER_VARIABLE
-  #   value: "its_value"
+  # You can add other environment variables your application needs.
+  # Example:
+  # - variable: DATABASE_URL
+  #   secret: YOUR_DATABASE_URL_SECRET_NAME
+  # - variable: FEATURE_FLAG_XYZ
+  #   value: "true"
+
+# Optional: Health check configuration.
+# App Hosting will send requests to this path to determine if an instance is healthy.
+# healthCheck:
+#   path: /api/health # A simple endpoint in your app that returns 200 OK
+#   healthyThreshold: 2 # Number of consecutive successful checks to be considered healthy.
+#   unhealthyThreshold: 3 # Number of consecutive failed checks to be considered unhealthy.
+#   timeoutSeconds: 5 # Seconds to wait for a health check response.
+#   intervalSeconds: 30 # Seconds between health checks.
+
+# Optional: VPC connector configuration for accessing private resources in your VPC network.
+# vpcConnector:
+#   name: projects/YOUR_PROJECT_ID/locations/YOUR_REGION/connectors/YOUR_CONNECTOR_NAME
+#   egressSettings: ALL_TRAFFIC # or PRIVATE_RANGES_ONLY
