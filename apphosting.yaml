@@ -14,11 +14,14 @@ runConfig:
 # For production, it's highly recommended to use Google Cloud Secret Manager
 # to store sensitive values like API keys.
 env:
+  # Example using Google Cloud Secret Manager (RECOMMENDED for API keys):
   - variable: GOOGLE_API_KEY
-    value: "YOUR_GOOGLE_API_KEY_HERE" # <-- Replace with your actual key or use Secret Manager
-  # Example using Google Cloud Secret Manager (recommended for API keys):
+    # Replace 'YOUR_SECRET_NAME_HERE' with the name of your secret in Google Cloud Secret Manager
+    # e.g., BLOOMVERSE_GOOGLE_API_KEY or GENKIT_API_KEY
+    secret: YOUR_SECRET_NAME_HERE
+  # Remove or comment out the direct value if you were using it:
   # - variable: GOOGLE_API_KEY
-  #   secret: NAME_OF_YOUR_SECRET_IN_SECRET_MANAGER # e.g., BLOOMVERSE_GOOGLE_API_KEY
+  #   value: "YOUR_OLD_API_KEY_WAS_HERE"
 
   # You can add other environment variables your app needs here.
   # - variable: ANOTHER_VARIABLE
