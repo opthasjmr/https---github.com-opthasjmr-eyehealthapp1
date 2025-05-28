@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -38,11 +39,25 @@ const generateLyricsFlow = ai.defineFlow(
     inputSchema: GenerateLyricsInputSchema,
     outputSchema: GenerateLyricsOutputSchema,
   },
-  async input => {
-    const {output} = await generateLyricsPrompt(input);
-    if (!output) {
-      throw new Error('The AI model failed to generate lyrics. Please try again.');
+  async (input: GenerateLyricsInput) => {
+    try {
+      const {output} = await generateLyricsPrompt(input);
+      if (!output || !output.lyrics) {
+        console.error('AI model call for lyrics generation succeeded but output was not in the expected format or was empty.');
+        throw new Error('The AI model did not return the expected lyrics output. Please try a different theme.');
+      }
+      return output;
+    } catch (e) {
+      const error = e as any;
+      console.error('Error in generateLyricsFlow:', error);
+      
+      let userMessage = 'An unexpected error occurred while generating lyrics. Please try again.';
+      if (error instanceof Error && error.message) {
+        if (error.message.startsWith('The AI model did not return')) {
+          userMessage = error.message;
+        }
+      }
+      throw new Error(userMessage);
     }
-    return output;
   }
 );

@@ -31,18 +31,34 @@ const generateImageFlow = ai.defineFlow(
     inputSchema: GenerateImageInputSchema,
     outputSchema: GenerateImageOutputSchema,
   },
-  async (input) => {
-    const {media} = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-exp', 
-      prompt: input.prompt,
-      config: {
-        responseModalities: ['TEXT', 'IMAGE'], 
-      },
-    });
+  async (input: GenerateImageInput) => {
+    try {
+      const {media} = await ai.generate({
+        model: 'googleai/gemini-2.0-flash-exp',
+        prompt: input.prompt,
+        config: {
+          responseModalities: ['TEXT', 'IMAGE'],
+        },
+      });
 
-    if (!media?.url) {
-      throw new Error('Image generation failed or did not return an image.');
+      if (!media?.url) {
+        console.error('Image generation call succeeded but media or media.url was missing.');
+        throw new Error('Image generation failed or did not return an image. Please try a different prompt.');
+      }
+      return { imageUrl: media.url };
+    } catch (e) {
+      const error = e as any;
+      console.error('Error in generateImageFlow:', error);
+
+      let userMessage = 'An unexpected error occurred while generating the image. Please try again.';
+      if (error instanceof Error && error.message) {
+        if (error.message.includes('SAFETY')) {
+             userMessage = 'Image generation was blocked due to safety settings. Please modify your prompt.';
+        } else if (error.message.startsWith('Image generation failed')) {
+            userMessage = error.message;
+        }
+      }
+      throw new Error(userMessage);
     }
-    return { imageUrl: media.url };
   }
 );
