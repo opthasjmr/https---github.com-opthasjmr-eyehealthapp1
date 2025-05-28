@@ -1,0 +1,50 @@
+
+# GitHub Action for deploying to Firebase Hosting on Pull Requests
+# This workflow builds and deploys your Next.js app to a preview channel.
+
+name: Deploy to Firebase Hosting (Preview)
+
+on:
+  pull_request:
+    branches:
+      - main # Or your project's default branch (e.g., master)
+    # Optional: You can restrict to PRs targeting specific branches
+    # types: [opened, synchronize, reopened]
+
+
+jobs:
+  build_and_preview:
+    # Ensures that the PR is from the same repository, not a fork, for security.
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    runs-on: ubuntu-latest
+    # Environment variables for the build process if needed
+    # env:
+      # GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY_BUILD }} # If Genkit is used during 'npm run build'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Ensure this matches your project's Node.js version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app
+        run: npm run build
+        # If your build needs GOOGLE_API_KEY:
+        # env:
+        #   GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY_BUILD }}
+
+      - name: Deploy to Firebase Hosting (Preview Channel)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' # GitHub Secret
+          projectId: '${{ vars.FIREBASE_PROJECT_ID }}' # GitHub Variable
+          # channelId is not specified for PRs; the action automatically creates/uses a preview channel.
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks # Required for App Hosting

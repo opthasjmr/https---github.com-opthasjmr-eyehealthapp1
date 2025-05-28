@@ -1,3 +1,4 @@
+
 # Settings to manage and configure a Firebase App Hosting backend.
 # https://firebase.google.com/docs/app-hosting/configure
 
@@ -5,3 +6,20 @@ runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
   maxInstances: 1
+  # Optional: specify minInstances if needed
+  # minInstances: 0
+
+# Environment variables for your running application.
+# GOOGLE_API_KEY is required for Genkit to function.
+# For production, it's highly recommended to use Google Cloud Secret Manager
+# to store sensitive values like API keys.
+env:
+  - variable: GOOGLE_API_KEY
+    value: "YOUR_GOOGLE_API_KEY_HERE" # <-- Replace with your actual key or use Secret Manager
+  # Example using Google Cloud Secret Manager (recommended for API keys):
+  # - variable: GOOGLE_API_KEY
+  #   secret: NAME_OF_YOUR_SECRET_IN_SECRET_MANAGER # e.g., BLOOMVERSE_GOOGLE_API_KEY
+
+  # You can add other environment variables your app needs here.
+  # - variable: ANOTHER_VARIABLE
+  #   value: "its_value"

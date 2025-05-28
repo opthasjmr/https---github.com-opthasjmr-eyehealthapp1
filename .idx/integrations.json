@@ -1,3 +1,6 @@
+
 {
-  "firebase_hosting": {}
+  "firebase_hosting": {
+    "github_workflow_configured": true
+  }
 }
