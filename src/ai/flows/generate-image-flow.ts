@@ -41,24 +41,28 @@ const generateImageFlow = ai.defineFlow(
         },
       });
 
-      if (!media?.url) {
-        console.error('Image generation call succeeded but media or media.url was missing.');
+      if (!media?.url || typeof media.url !== 'string' || !media.url.startsWith('data:image')) {
+        console.error('Image generation call succeeded but media or media.url was missing or invalid.');
         throw new Error('Image generation failed or did not return an image. Please try a different prompt.');
       }
       return { imageUrl: media.url };
     } catch (e) {
-      const error = e as any;
-      console.error('Error in generateImageFlow:', error);
+      console.error('Error in generateImageFlow:', e); // Log the original error
 
       let userMessage = 'An unexpected error occurred while generating the image. Please try again.';
-      if (error instanceof Error && error.message) {
-        if (error.message.includes('SAFETY')) {
+
+      if (e instanceof Error && e.message) {
+        if (e.message.includes('SAFETY') || e.message.toLowerCase().includes('safety policy')) {
              userMessage = 'Image generation was blocked due to safety settings. Please modify your prompt.';
-        } else if (error.message.startsWith('Image generation failed')) {
-            userMessage = error.message;
+        } else if (e.message.startsWith('Image generation failed or did not return an image')) {
+            userMessage = e.message;
         }
+        // Consider if other specific messages from the Gemini API need custom handling.
       }
-      throw new Error(userMessage);
+      // Else, if e is not an Error instance or e.message is not specific, we use the generic message.
+
+      throw new Error(userMessage); // Throw a new, simple Error object for the client.
     }
   }
 );
+

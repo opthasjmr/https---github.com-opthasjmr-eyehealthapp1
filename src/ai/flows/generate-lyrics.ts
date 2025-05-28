@@ -42,22 +42,27 @@ const generateLyricsFlow = ai.defineFlow(
   async (input: GenerateLyricsInput) => {
     try {
       const {output} = await generateLyricsPrompt(input);
-      if (!output || !output.lyrics) {
+      if (!output || typeof output.lyrics !== 'string' || output.lyrics.trim() === '') {
         console.error('AI model call for lyrics generation succeeded but output was not in the expected format or was empty.');
         throw new Error('The AI model did not return the expected lyrics output. Please try a different theme.');
       }
       return output;
     } catch (e) {
-      const error = e as any;
-      console.error('Error in generateLyricsFlow:', error);
-      
+      console.error('Error in generateLyricsFlow:', e); // Log the original error
+
       let userMessage = 'An unexpected error occurred while generating lyrics. Please try again.';
-      if (error instanceof Error && error.message) {
-        if (error.message.startsWith('The AI model did not return')) {
-          userMessage = error.message;
+
+      if (e instanceof Error && e.message) {
+        // Check if it's one of our custom, user-facing errors thrown from the try block
+        if (e.message.startsWith('The AI model did not return the expected lyrics output')) {
+          userMessage = e.message;
         }
+        // Potentially add more checks here for other known error messages from Genkit/GoogleAI
       }
-      throw new Error(userMessage);
+      // Else, if e is not an Error instance or e.message is not specific, we use the generic message.
+      
+      throw new Error(userMessage); // Throw a new, simple Error object for the client.
     }
   }
 );
+

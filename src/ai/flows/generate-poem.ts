@@ -51,24 +51,27 @@ const generatePoemFlow = ai.defineFlow(
     try {
       const {output} = await poemPrompt(input);
 
-      if (!output || !output.poem) {
+      if (!output || typeof output.poem !== 'string' || output.poem.trim() === '') {
         console.error('AI model call for poem generation succeeded but output was not in the expected format or was empty.');
         throw new Error('The AI model did not return the expected poem output. Please try a different prompt or style.');
       }
       return output;
     } catch (e) {
-      const error = e as any;
-      console.error('Error in generatePoemFlow:', error);
+      console.error('Error in generatePoemFlow:', e); // Log the original error
 
       let userMessage = 'An unexpected error occurred while generating the poem. Please try again.';
-      if (error instanceof Error && error.message) {
-        if (error.message.startsWith('The AI model did not return')) {
-          userMessage = error.message;
+
+      if (e instanceof Error && e.message) {
+        // Check if it's one of our custom, user-facing errors thrown from the try block
+        if (e.message.startsWith('The AI model did not return the expected poem output')) {
+          userMessage = e.message;
         }
-        // For other errors, the generic message is often better for the user,
-        // and the full error is logged on the server.
+        // Potentially add more checks here for other known error messages from Genkit/GoogleAI
       }
-      throw new Error(userMessage);
+      // Else, if e is not an Error instance or e.message is not specific, we use the generic message.
+
+      throw new Error(userMessage); // Throw a new, simple Error object for the client.
     }
   }
 );
+
