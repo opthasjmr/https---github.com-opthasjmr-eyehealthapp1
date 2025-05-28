@@ -1,34 +1,30 @@
-# Dependencies
-/node_modules
+# Firebase
+.firebase
+firebase.json
+.firebaserc
+database-debug.log
+firebase-debug.log
+firestore-debug.log
 
 # Next.js
-/.next/
-/out/
-next-env.d.ts
-
-# Production
-/build
-
-# Misc
+.next/
+out/
+node_modules/
 .DS_Store
 *.pem
-
-# Local Environment Variables
-# Ensure .env files containing secrets are not committed.
-# You can create a .env.example file to show the structure.
-.env
-.env*.local
-
-# TypeScript
-*.tsbuildinfo
-
-# Genkit Cache & Logs
-.genkit/cache/
-.genkit/logs/
-
-# Firebase local emulators & logs
 *.log
-firebase-debug.log
-database-debug.log
-storage-debug.log
-.firebase/emulators/
+*.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# IDE / System
+.vscode/
+.idea/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+build/
+dist/
+coverage/
