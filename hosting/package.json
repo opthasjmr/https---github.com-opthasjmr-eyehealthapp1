@@ -1,0 +1,7 @@
+
+{
+  "name": "bloomverse-hosting-folder-deprecated",
+  "description": "This package.json is inside a 'hosting' directory that appears to be a duplicate or outdated part of the main BloomVerse project. The main project's package.json is at the root level. This folder should likely be removed to avoid confusion.",
+  "private": true,
+  "version": "0.0.0"
+}
